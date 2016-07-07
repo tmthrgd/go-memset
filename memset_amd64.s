@@ -11,8 +11,6 @@
 
 #include "textflag.h"
 
-GLOBL memsetShuf<>(SB),RODATA,$16
-
 // func memsetAsm(*byte, uint64, byte)
 TEXT ·memsetAsm(SB),NOSPLIT,$0
 	MOVQ data+0(FP), DI
@@ -23,7 +21,8 @@ TEXT ·memsetAsm(SB),NOSPLIT,$0
 	JB loop
 
 	PINSRB $0, SI, X0
-	PSHUFB memsetShuf<>(SB), X0
+	PXOR X1, X1
+	PSHUFB X1, X0
 
 	CMPB runtime·support_avx(SB), $1
 	JNE bigloop
