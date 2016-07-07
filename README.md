@@ -37,86 +37,78 @@ go get github.com/tmthrgd/go-memset
 ## Benchmark
 
 ```
-BenchmarkZero_32-8    	200000000	         6.38 ns/op	5013.17 MB/s
-BenchmarkZero_128-8   	200000000	         6.67 ns/op	19198.09 MB/s
-BenchmarkZero_1k-8    	50000000	        23.1 ns/op	44302.00 MB/s
-BenchmarkZero_16k-8   	 5000000	       278 ns/op	58833.66 MB/s
-BenchmarkZero_128k-8  	  500000	      3703 ns/op	35389.69 MB/s
-BenchmarkZero_1M-8    	   50000	     39952 ns/op	26245.73 MB/s
-BenchmarkZero_16M-8   	    2000	   1100177 ns/op	15249.55 MB/s
-BenchmarkZero_128M-8  	     200	   8791286 ns/op	15267.13 MB/s
-BenchmarkZero_512M-8  	      50	  35738899 ns/op	15022.03 MB/s
-BenchmarkSet_32-8     	200000000	         6.33 ns/op	5058.06 MB/s
-BenchmarkSet_128-8    	200000000	         6.56 ns/op	19522.67 MB/s
-BenchmarkSet_1k-8     	50000000	        22.9 ns/op	44785.40 MB/s
-BenchmarkSet_16k-8    	 5000000	       278 ns/op	58782.02 MB/s
-BenchmarkSet_128k-8   	  500000	      3725 ns/op	35183.52 MB/s
-BenchmarkSet_1M-8     	   30000	     40357 ns/op	25981.87 MB/s
-BenchmarkSet_16M-8    	    2000	   1119679 ns/op	14983.94 MB/s
-BenchmarkSet_128M-8   	     200	   8764132 ns/op	15314.43 MB/s
-BenchmarkSet_512M-8   	      50	  35856688 ns/op	14972.69 MB/s
-
-BenchmarkZeroGo_32-8  	300000000	         5.49 ns/op	5832.67 MB/s
-BenchmarkZeroGo_128-8 	200000000	         6.49 ns/op	19736.93 MB/s
-BenchmarkZeroGo_1k-8  	100000000	        21.1 ns/op	48610.78 MB/s
-BenchmarkZeroGo_16k-8 	 5000000	       282 ns/op	57925.53 MB/s
-BenchmarkZeroGo_128k-8	  500000	      3744 ns/op	35007.18 MB/s
-BenchmarkZeroGo_1M-8  	   30000	     40439 ns/op	25929.63 MB/s
-BenchmarkZeroGo_16M-8 	    1000	   1317314 ns/op	12735.92 MB/s
-BenchmarkZeroGo_128M-8	     100	  10727737 ns/op	12511.28 MB/s
-BenchmarkZeroGo_512M-8	      30	  43004291 ns/op	12484.12 MB/s
-BenchmarkSetGo_32-8   	50000000	        28.5 ns/op	1123.90 MB/s
-BenchmarkSetGo_128-8  	20000000	        83.5 ns/op	1532.35 MB/s
-BenchmarkSetGo_1k-8   	 3000000	       555 ns/op	1842.64 MB/s
-BenchmarkSetGo_16k-8  	  200000	      8651 ns/op	1893.79 MB/s
-BenchmarkSetGo_128k-8 	   20000	     69114 ns/op	1896.44 MB/s
-BenchmarkSetGo_1M-8   	    3000	    552932 ns/op	1896.39 MB/s
-BenchmarkSetGo_16M-8  	     200	   8950601 ns/op	1874.42 MB/s
-BenchmarkSetGo_128M-8 	      20	  71233792 ns/op	1884.19 MB/s
-BenchmarkSetGo_512M-8 	       5	 285058677 ns/op	1883.37 MB/s
+BenchmarkMemset_32-8  	200000000	         6.32 ns/op	5060.69 MB/s
+BenchmarkMemset_128-8 	200000000	         6.55 ns/op	19527.77 MB/s
+BenchmarkMemset_1k-8  	50000000	        22.9 ns/op	44788.18 MB/s
+BenchmarkMemset_16k-8 	 5000000	       278 ns/op	58868.04 MB/s
+BenchmarkMemset_128k-8	  500000	      3726 ns/op	35171.08 MB/s
+BenchmarkMemset_1M-8  	   30000	     40219 ns/op	26071.10 MB/s
+BenchmarkMemset_16M-8 	    2000	   1120266 ns/op	14976.09 MB/s
+BenchmarkMemset_128M-8	     200	   8749141 ns/op	15340.67 MB/s
+BenchmarkMemset_512M-8	      50	  35078079 ns/op	15305.03 MB/s
 ```
 
 ```
-benchmark                Go ns/op      asm ns/op     delta
-BenchmarkZero_32-8       5.49          6.38          +16.21%
-BenchmarkZero_128-8      6.49          6.67          +2.77%
-BenchmarkZero_1k-8       21.1          23.1          +9.48%
-BenchmarkZero_16k-8      282           278           -1.42%
-BenchmarkZero_128k-8     3744          3703          -1.10%
-BenchmarkZero_1M-8       40439         39952         -1.20%
-BenchmarkZero_16M-8      1317314       1100177       -16.48%
-BenchmarkZero_128M-8     10727737      8791286       -18.05%
-BenchmarkZero_512M-8     43004291      35738899      -16.89%
-BenchmarkSet_32-8        28.5          6.33          -77.79%
-BenchmarkSet_128-8       83.5          6.56          -92.14%
-BenchmarkSet_1k-8        555           22.9          -95.87%
-BenchmarkSet_16k-8       8651          278           -96.79%
-BenchmarkSet_128k-8      69114         3725          -94.61%
-BenchmarkSet_1M-8        552932        40357         -92.70%
-BenchmarkSet_16M-8       8950601       1119679       -87.49%
-BenchmarkSet_128M-8      71233792      8764132       -87.70%
-BenchmarkSet_512M-8      285058677     35856688      -87.42%
+BenchmarkGoZero_32-8  	500000000	         3.43 ns/op	9326.33 MB/s
+BenchmarkGoZero_128-8 	300000000	         4.50 ns/op	28414.80 MB/s
+BenchmarkGoZero_1k-8  	100000000	        19.1 ns/op	53557.45 MB/s
+BenchmarkGoZero_16k-8 	 5000000	       278 ns/op	58854.20 MB/s
+BenchmarkGoZero_128k-8	  500000	      3733 ns/op	35102.85 MB/s
+BenchmarkGoZero_1M-8  	   50000	     39968 ns/op	26234.86 MB/s
+BenchmarkGoZero_16M-8 	    1000	   1319397 ns/op	12715.81 MB/s
+BenchmarkGoZero_128M-8	     100	  10682865 ns/op	12563.83 MB/s
+BenchmarkGoZero_512M-8	      30	  42689135 ns/op	12576.29 MB/s
+BenchmarkGoSet_32-8   	100000000	        17.4 ns/op	1840.05 MB/s
+BenchmarkGoSet_128-8  	20000000	        73.0 ns/op	1754.20 MB/s
+BenchmarkGoSet_1k-8   	 3000000	       545 ns/op	1878.82 MB/s
+BenchmarkGoSet_16k-8  	  200000	      8638 ns/op	1896.63 MB/s
+BenchmarkGoSet_128k-8 	   20000	     69077 ns/op	1897.47 MB/s
+BenchmarkGoSet_1M-8   	    3000	    552612 ns/op	1897.49 MB/s
+BenchmarkGoSet_16M-8  	     200	   8867019 ns/op	1892.09 MB/s
+BenchmarkGoSet_128M-8 	      20	  70937303 ns/op	1892.06 MB/s
+BenchmarkGoSet_512M-8 	       5	 283412563 ns/op	1894.31 MB/s
+```
 
-benchmark                Go MB/s      asm MB/s     speedup
-BenchmarkZero_32-8       5832.67      5013.17      0.86x
-BenchmarkZero_128-8      19736.93     19198.09     0.97x
-BenchmarkZero_1k-8       48610.78     44302.00     0.91x
-BenchmarkZero_16k-8      57925.53     58833.66     1.02x
-BenchmarkZero_128k-8     35007.18     35389.69     1.01x
-BenchmarkZero_1M-8       25929.63     26245.73     1.01x
-BenchmarkZero_16M-8      12735.92     15249.55     1.20x
-BenchmarkZero_128M-8     12511.28     15267.13     1.22x
-BenchmarkZero_512M-8     12484.12     15022.03     1.20x
-BenchmarkSet_32-8        1123.90      5058.06      4.50x
-BenchmarkSet_128-8       1532.35      19522.67     12.74x
-BenchmarkSet_1k-8        1842.64      44785.40     24.31x
-BenchmarkSet_16k-8       1893.79      58782.02     31.04x
-BenchmarkSet_128k-8      1896.44      35183.52     18.55x
-BenchmarkSet_1M-8        1896.39      25981.87     13.70x
-BenchmarkSet_16M-8       1874.42      14983.94     7.99x
-BenchmarkSet_128M-8      1884.19      15314.43     8.13x
-BenchmarkSet_512M-8      1883.37      14972.69     7.95x
+```
+benchmark                old ns/op     new ns/op     delta
+BenchmarkZero_32-8       3.43          6.32          +84.26%
+BenchmarkZero_128-8      4.50          6.55          +45.56%
+BenchmarkZero_1k-8       19.1          22.9          +19.90%
+BenchmarkZero_16k-8      278           278           +0.00%
+BenchmarkZero_128k-8     3733          3726          -0.19%
+BenchmarkZero_1M-8       39968         40219         +0.63%
+BenchmarkZero_16M-8      1319397       1120266       -15.09%
+BenchmarkZero_128M-8     10682865      8749141       -18.10%
+BenchmarkZero_512M-8     42689135      35078079      -17.83%
+BenchmarkSet_32-8        17.4          6.32          -63.68%
+BenchmarkSet_128-8       73.0          6.55          -91.03%
+BenchmarkSet_1k-8        545           22.9          -95.80%
+BenchmarkSet_16k-8       8638          278           -96.78%
+BenchmarkSet_128k-8      69077         3726          -94.61%
+BenchmarkSet_1M-8        552612        40219         -92.72%
+BenchmarkSet_16M-8       8867019       1120266       -87.37%
+BenchmarkSet_128M-8      70937303      8749141       -87.67%
+BenchmarkSet_512M-8      283412563     35078079      -87.62%
 
+benchmark                old MB/s     new MB/s     speedup
+BenchmarkZero_32-8       9326.33      5060.69      0.54x
+BenchmarkZero_128-8      28414.80     19527.77     0.69x
+BenchmarkZero_1k-8       53557.45     44788.18     0.84x
+BenchmarkZero_16k-8      58854.20     58868.04     1.00x
+BenchmarkZero_128k-8     35102.85     35171.08     1.00x
+BenchmarkZero_1M-8       26234.86     26071.10     0.99x
+BenchmarkZero_16M-8      12715.81     14976.09     1.18x
+BenchmarkZero_128M-8     12563.83     15340.67     1.22x
+BenchmarkZero_512M-8     12576.29     15305.03     1.22x
+BenchmarkSet_32-8        1840.05      5060.69      2.75x
+BenchmarkSet_128-8       1754.20      19527.77     11.13x
+BenchmarkSet_1k-8        1878.82      44788.18     23.84x
+BenchmarkSet_16k-8       1896.63      58868.04     31.04x
+BenchmarkSet_128k-8      1897.47      35171.08     18.54x
+BenchmarkSet_1M-8        1897.49      26071.10     13.74x
+BenchmarkSet_16M-8       1892.09      14976.09     7.92x
+BenchmarkSet_128M-8      1892.06      15340.67     8.11x
+BenchmarkSet_512M-8      1894.31      15305.03     8.08x
 ```
 
 ## License

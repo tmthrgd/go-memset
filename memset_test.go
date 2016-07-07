@@ -12,18 +12,6 @@ import (
 	"testing/quick"
 )
 
-func memsetGo(data []byte, value byte) {
-	if value == 0 {
-		for i := range data {
-			data[i] = 0
-		}
-	} else {
-		for i := range data {
-			data[i] = value
-		}
-	}
-}
-
 func testCorrect(t *testing.T, size func(rand *rand.Rand) int, scale float64) {
 	if err := quick.Check(func(data []byte, value byte) bool {
 		Memset(data, value)
@@ -71,9 +59,11 @@ func TestCorrectHuge(t *testing.T) {
 	}, 0.025)
 }
 
-func benchmarkMemset(b *testing.B, value byte, l int) {
+func benchmarkMemset(b *testing.B, l int) {
 	data := make([]byte, l)
 	rand.Read(data)
+
+	value := byte(rand.Intn(0x100))
 
 	b.SetBytes(int64(l))
 	b.ResetTimer()
@@ -83,79 +73,43 @@ func benchmarkMemset(b *testing.B, value byte, l int) {
 	}
 }
 
-func BenchmarkZero_32(b *testing.B) {
-	benchmarkMemset(b, 0, 32)
+func BenchmarkMemset_32(b *testing.B) {
+	benchmarkMemset(b, 32)
 }
 
-func BenchmarkZero_128(b *testing.B) {
-	benchmarkMemset(b, 0, 128)
+func BenchmarkMemset_128(b *testing.B) {
+	benchmarkMemset(b, 128)
 }
 
-func BenchmarkZero_1k(b *testing.B) {
-	benchmarkMemset(b, 0, 1*1024)
+func BenchmarkMemset_1k(b *testing.B) {
+	benchmarkMemset(b, 1*1024)
 }
 
-func BenchmarkZero_16k(b *testing.B) {
-	benchmarkMemset(b, 0, 16*1024)
+func BenchmarkMemset_16k(b *testing.B) {
+	benchmarkMemset(b, 16*1024)
 }
 
-func BenchmarkZero_128k(b *testing.B) {
-	benchmarkMemset(b, 0, 128*1024)
+func BenchmarkMemset_128k(b *testing.B) {
+	benchmarkMemset(b, 128*1024)
 }
 
-func BenchmarkZero_1M(b *testing.B) {
-	benchmarkMemset(b, 0, 1024*1024)
+func BenchmarkMemset_1M(b *testing.B) {
+	benchmarkMemset(b, 1024*1024)
 }
 
-func BenchmarkZero_16M(b *testing.B) {
-	benchmarkMemset(b, 0, 16*1024*1024)
+func BenchmarkMemset_16M(b *testing.B) {
+	benchmarkMemset(b, 16*1024*1024)
 }
 
-func BenchmarkZero_128M(b *testing.B) {
-	benchmarkMemset(b, 0, 128*1024*1024)
+func BenchmarkMemset_128M(b *testing.B) {
+	benchmarkMemset(b, 128*1024*1024)
 }
 
-func BenchmarkZero_512M(b *testing.B) {
-	benchmarkMemset(b, 0, 512*1024*1024)
+func BenchmarkMemset_512M(b *testing.B) {
+	benchmarkMemset(b, 512*1024*1024)
 }
 
-func BenchmarkSet_32(b *testing.B) {
-	benchmarkMemset(b, 0x55, 32)
-}
-
-func BenchmarkSet_128(b *testing.B) {
-	benchmarkMemset(b, 0x55, 128)
-}
-
-func BenchmarkSet_1k(b *testing.B) {
-	benchmarkMemset(b, 0x55, 1*1024)
-}
-
-func BenchmarkSet_16k(b *testing.B) {
-	benchmarkMemset(b, 0x55, 16*1024)
-}
-
-func BenchmarkSet_128k(b *testing.B) {
-	benchmarkMemset(b, 0x55, 128*1024)
-}
-
-func BenchmarkSet_1M(b *testing.B) {
-	benchmarkMemset(b, 0x55, 1024*1024)
-}
-
-func BenchmarkSet_16M(b *testing.B) {
-	benchmarkMemset(b, 0x55, 16*1024*1024)
-}
-
-func BenchmarkSet_128M(b *testing.B) {
-	benchmarkMemset(b, 0x55, 128*1024*1024)
-}
-
-func BenchmarkSet_512M(b *testing.B) {
-	benchmarkMemset(b, 0x55, 512*1024*1024)
-}
-
-func benchmarkMemsetGo(b *testing.B, value byte, l int) {
+func benchmarkGoZero(b *testing.B, l int) {
 	data := make([]byte, l)
 	rand.Read(data)
 
@@ -163,78 +117,96 @@ func benchmarkMemsetGo(b *testing.B, value byte, l int) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		memsetGo(data, value)
+		for j := range data {
+			data[j] = 0
+		}
 	}
 }
 
-func BenchmarkZeroGo_32(b *testing.B) {
-	benchmarkMemsetGo(b, 0, 32)
+func BenchmarkGoZero_32(b *testing.B) {
+	benchmarkGoZero(b, 32)
 }
 
-func BenchmarkZeroGo_128(b *testing.B) {
-	benchmarkMemsetGo(b, 0, 128)
+func BenchmarkGoZero_128(b *testing.B) {
+	benchmarkGoZero(b, 128)
 }
 
-func BenchmarkZeroGo_1k(b *testing.B) {
-	benchmarkMemsetGo(b, 0, 1*1024)
+func BenchmarkGoZero_1k(b *testing.B) {
+	benchmarkGoZero(b, 1*1024)
 }
 
-func BenchmarkZeroGo_16k(b *testing.B) {
-	benchmarkMemsetGo(b, 0, 16*1024)
+func BenchmarkGoZero_16k(b *testing.B) {
+	benchmarkGoZero(b, 16*1024)
 }
 
-func BenchmarkZeroGo_128k(b *testing.B) {
-	benchmarkMemsetGo(b, 0, 128*1024)
+func BenchmarkGoZero_128k(b *testing.B) {
+	benchmarkGoZero(b, 128*1024)
 }
 
-func BenchmarkZeroGo_1M(b *testing.B) {
-	benchmarkMemsetGo(b, 0, 1024*1024)
+func BenchmarkGoZero_1M(b *testing.B) {
+	benchmarkGoZero(b, 1024*1024)
 }
 
-func BenchmarkZeroGo_16M(b *testing.B) {
-	benchmarkMemsetGo(b, 0, 16*1024*1024)
+func BenchmarkGoZero_16M(b *testing.B) {
+	benchmarkGoZero(b, 16*1024*1024)
 }
 
-func BenchmarkZeroGo_128M(b *testing.B) {
-	benchmarkMemsetGo(b, 0, 128*1024*1024)
+func BenchmarkGoZero_128M(b *testing.B) {
+	benchmarkGoZero(b, 128*1024*1024)
 }
 
-func BenchmarkZeroGo_512M(b *testing.B) {
-	benchmarkMemsetGo(b, 0, 512*1024*1024)
+func BenchmarkGoZero_512M(b *testing.B) {
+	benchmarkGoZero(b, 512*1024*1024)
 }
 
-func BenchmarkSetGo_32(b *testing.B) {
-	benchmarkMemsetGo(b, 0x55, 32)
+func benchmarkGoSet(b *testing.B, l int) {
+	data := make([]byte, l)
+	rand.Read(data)
+
+	value := byte(rand.Intn(0x100))
+
+	b.SetBytes(int64(l))
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		for j := range data {
+			data[j] = value
+		}
+	}
 }
 
-func BenchmarkSetGo_128(b *testing.B) {
-	benchmarkMemsetGo(b, 0x55, 128)
+func BenchmarkGoSet_32(b *testing.B) {
+	benchmarkGoSet(b, 32)
 }
 
-func BenchmarkSetGo_1k(b *testing.B) {
-	benchmarkMemsetGo(b, 0x55, 1*1024)
+func BenchmarkGoSet_128(b *testing.B) {
+	benchmarkGoSet(b, 128)
 }
 
-func BenchmarkSetGo_16k(b *testing.B) {
-	benchmarkMemsetGo(b, 0x55, 16*1024)
+func BenchmarkGoSet_1k(b *testing.B) {
+	benchmarkGoSet(b, 1*1024)
 }
 
-func BenchmarkSetGo_128k(b *testing.B) {
-	benchmarkMemsetGo(b, 0x55, 128*1024)
+func BenchmarkGoSet_16k(b *testing.B) {
+	benchmarkGoSet(b, 16*1024)
 }
 
-func BenchmarkSetGo_1M(b *testing.B) {
-	benchmarkMemsetGo(b, 0x55, 1024*1024)
+func BenchmarkGoSet_128k(b *testing.B) {
+	benchmarkGoSet(b, 128*1024)
 }
 
-func BenchmarkSetGo_16M(b *testing.B) {
-	benchmarkMemsetGo(b, 0x55, 16*1024*1024)
+func BenchmarkGoSet_1M(b *testing.B) {
+	benchmarkGoSet(b, 1024*1024)
 }
 
-func BenchmarkSetGo_128M(b *testing.B) {
-	benchmarkMemsetGo(b, 0x55, 128*1024*1024)
+func BenchmarkGoSet_16M(b *testing.B) {
+	benchmarkGoSet(b, 16*1024*1024)
 }
 
-func BenchmarkSetGo_512M(b *testing.B) {
-	benchmarkMemsetGo(b, 0x55, 512*1024*1024)
+func BenchmarkGoSet_128M(b *testing.B) {
+	benchmarkGoSet(b, 128*1024*1024)
+}
+
+func BenchmarkGoSet_512M(b *testing.B) {
+	benchmarkGoSet(b, 512*1024*1024)
 }
