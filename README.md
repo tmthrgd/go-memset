@@ -113,5 +113,5 @@ BenchmarkSet_512M-8      1894.31      15305.03     8.08x
 
 ## License
 
-Unless otherwise noted, the go-popcount source files are distributed under the Modified BSD License
+Unless otherwise noted, the go-memset source files are distributed under the Modified BSD License
 found in the LICENSE file.
