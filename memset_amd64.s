@@ -14,10 +14,10 @@
 // func memsetAsm(*byte, uint64, byte)
 TEXT ·memsetAsm(SB),NOSPLIT,$0
 	MOVQ data+0(FP), DI
-	MOVQ len+8(FP), CX
+	MOVQ len+8(FP), BX
 	MOVB value+16(FP), SI
 
-	CMPQ CX, $16
+	CMPQ BX, $16
 	JB loop
 
 	PINSRB $0, SI, X0
@@ -27,43 +27,43 @@ TEXT ·memsetAsm(SB),NOSPLIT,$0
 	CMPB runtime·support_avx(SB), $1
 	JNE bigloop
 
-	CMPQ CX, $64
+	CMPQ BX, $64
 	JB bigloop
 
 	// VINSERTF128 $1, X0, Y0, Y0
 	BYTE $0xc4; BYTE $0xe3; BYTE $0x7d; BYTE $0x18; BYTE $0xc0; BYTE $0x01
 
-	CMPQ CX, $0x1000000
+	CMPQ BX, $0x1000000
 	JGE hugeloop_nt_preheader
 
 hugeloop:
-	VMOVDQU Y0, -32(DI)(CX*1)
-	VMOVDQU Y0, -64(DI)(CX*1)
+	VMOVDQU Y0, -32(DI)(BX*1)
+	VMOVDQU Y0, -64(DI)(BX*1)
 
-	SUBQ $64, CX
+	SUBQ $64, BX
 	JZ ret_after_y0
 
-	CMPQ CX, $64
+	CMPQ BX, $64
 	JGE hugeloop
 
 	VZEROUPPER
 
-	CMPQ CX, $16
+	CMPQ BX, $16
 	JB loop
 
 bigloop:
-	MOVOU X0, -16(DI)(CX*1)
+	MOVOU X0, -16(DI)(BX*1)
 
-	SUBQ $16, CX
+	SUBQ $16, BX
 	JZ ret
 
-	CMPQ CX, $16
+	CMPQ BX, $16
 	JGE bigloop
 
 loop:
-	MOVB SI, -1(DI)(CX*1)
+	MOVB SI, -1(DI)(BX*1)
 
-	DECQ CX
+	DECQ BX
 	JNZ loop
 
 ret:
@@ -75,27 +75,27 @@ ret_after_y0:
 
 hugeloop_nt_preheader:
 	// Align to 32 byte boundary
-	VMOVDQU Y0, -32(DI)(CX*1)
-	ADDQ DI, CX
-	ANDQ $~31, CX
-	SUBQ DI, CX
+	VMOVDQU Y0, -32(DI)(BX*1)
+	ADDQ DI, BX
+	ANDQ $~31, BX
+	SUBQ DI, BX
 
 hugeloop_nt:
-	VMOVNTDQ Y0, -32(DI)(CX*1)
-	VMOVNTDQ Y0, -64(DI)(CX*1)
-	VMOVNTDQ Y0, -96(DI)(CX*1)
-	VMOVNTDQ Y0, -128(DI)(CX*1)
+	VMOVNTDQ Y0, -32(DI)(BX*1)
+	VMOVNTDQ Y0, -64(DI)(BX*1)
+	VMOVNTDQ Y0, -96(DI)(BX*1)
+	VMOVNTDQ Y0, -128(DI)(BX*1)
 
-	SUBQ $128, CX
+	SUBQ $128, BX
 	JZ ret_after_nt
 
-	CMPQ CX, $128
+	CMPQ BX, $128
 	JGE hugeloop_nt
 
 	SFENCE
 	VZEROUPPER
 
-	CMPQ CX, $16
+	CMPQ BX, $16
 	JGE bigloop
 	JMP loop
 
