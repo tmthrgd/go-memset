@@ -34,7 +34,7 @@ TEXT ·memsetAsm(SB),NOSPLIT,$0
 	BYTE $0xc4; BYTE $0xe3; BYTE $0x7d; BYTE $0x18; BYTE $0xc0; BYTE $0x01
 
 	CMPQ BX, $0x1000000
-	JGE hugeloop_nt_preheader
+	JAE hugeloop_nt_preheader
 
 hugeloop:
 	VMOVDQU Y0, -32(DI)(BX*1)
@@ -44,7 +44,7 @@ hugeloop:
 	JZ ret_after_y0
 
 	CMPQ BX, $64
-	JGE hugeloop
+	JAE hugeloop
 
 	VZEROUPPER
 
@@ -58,7 +58,7 @@ bigloop:
 	JZ ret
 
 	CMPQ BX, $16
-	JGE bigloop
+	JAE bigloop
 
 loop:
 	MOVB SI, -1(DI)(BX*1)
@@ -90,13 +90,13 @@ hugeloop_nt:
 	JZ ret_after_nt
 
 	CMPQ BX, $128
-	JGE hugeloop_nt
+	JAE hugeloop_nt
 
 	SFENCE
 	VZEROUPPER
 
 	CMPQ BX, $16
-	JGE bigloop
+	JAE bigloop
 	JMP loop
 
 ret_after_nt:
