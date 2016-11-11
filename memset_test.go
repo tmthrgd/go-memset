@@ -59,154 +59,75 @@ func TestCorrectHuge(t *testing.T) {
 	}, 0.025)
 }
 
-func benchmarkMemset(b *testing.B, l int) {
-	data := make([]byte, l)
-	rand.Read(data)
+type size struct {
+	name string
+	l    int
+}
 
-	value := byte(rand.Intn(0x100))
+var sizes = []size{
+	{"32", 32},
+	{"128", 128},
+	{"1K", 1 * 1024},
+	{"16K", 16 * 1024},
+	{"128K", 128 * 1024},
+	{"1M", 1024 * 1024},
+	{"16M", 16 * 1024 * 1024},
+	{"128M", 128 * 1024 * 1024},
+	{"512M", 512 * 1024 * 1024},
+}
 
-	b.SetBytes(int64(l))
-	b.ResetTimer()
+func BenchmarkMemset(b *testing.B) {
+	for _, size := range sizes {
+		b.Run(size.name, func(b *testing.B) {
+			data := make([]byte, size.l)
+			rand.Read(data)
 
-	for i := 0; i < b.N; i++ {
-		Memset(data, value)
+			value := byte(rand.Intn(0x100))
+
+			b.SetBytes(int64(size.l))
+			b.ResetTimer()
+
+			for i := 0; i < b.N; i++ {
+				Memset(data, value)
+			}
+		})
 	}
 }
 
-func BenchmarkMemset_32(b *testing.B) {
-	benchmarkMemset(b, 32)
-}
+func BenchmarkGoZero(b *testing.B) {
+	for _, size := range sizes {
+		b.Run(size.name, func(b *testing.B) {
+			data := make([]byte, size.l)
+			rand.Read(data)
 
-func BenchmarkMemset_128(b *testing.B) {
-	benchmarkMemset(b, 128)
-}
+			b.SetBytes(int64(size.l))
+			b.ResetTimer()
 
-func BenchmarkMemset_1k(b *testing.B) {
-	benchmarkMemset(b, 1*1024)
-}
-
-func BenchmarkMemset_16k(b *testing.B) {
-	benchmarkMemset(b, 16*1024)
-}
-
-func BenchmarkMemset_128k(b *testing.B) {
-	benchmarkMemset(b, 128*1024)
-}
-
-func BenchmarkMemset_1M(b *testing.B) {
-	benchmarkMemset(b, 1024*1024)
-}
-
-func BenchmarkMemset_16M(b *testing.B) {
-	benchmarkMemset(b, 16*1024*1024)
-}
-
-func BenchmarkMemset_128M(b *testing.B) {
-	benchmarkMemset(b, 128*1024*1024)
-}
-
-func BenchmarkMemset_512M(b *testing.B) {
-	benchmarkMemset(b, 512*1024*1024)
-}
-
-func benchmarkGoZero(b *testing.B, l int) {
-	data := make([]byte, l)
-	rand.Read(data)
-
-	b.SetBytes(int64(l))
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		for j := range data {
-			data[j] = 0
-		}
+			for i := 0; i < b.N; i++ {
+				for j := range data {
+					data[j] = 0
+				}
+			}
+		})
 	}
 }
 
-func BenchmarkGoZero_32(b *testing.B) {
-	benchmarkGoZero(b, 32)
-}
+func BenchmarkGoSet(b *testing.B) {
+	for _, size := range sizes {
+		b.Run(size.name, func(b *testing.B) {
+			data := make([]byte, size.l)
+			rand.Read(data)
 
-func BenchmarkGoZero_128(b *testing.B) {
-	benchmarkGoZero(b, 128)
-}
+			value := byte(rand.Intn(0x100))
 
-func BenchmarkGoZero_1k(b *testing.B) {
-	benchmarkGoZero(b, 1*1024)
-}
+			b.SetBytes(int64(size.l))
+			b.ResetTimer()
 
-func BenchmarkGoZero_16k(b *testing.B) {
-	benchmarkGoZero(b, 16*1024)
-}
-
-func BenchmarkGoZero_128k(b *testing.B) {
-	benchmarkGoZero(b, 128*1024)
-}
-
-func BenchmarkGoZero_1M(b *testing.B) {
-	benchmarkGoZero(b, 1024*1024)
-}
-
-func BenchmarkGoZero_16M(b *testing.B) {
-	benchmarkGoZero(b, 16*1024*1024)
-}
-
-func BenchmarkGoZero_128M(b *testing.B) {
-	benchmarkGoZero(b, 128*1024*1024)
-}
-
-func BenchmarkGoZero_512M(b *testing.B) {
-	benchmarkGoZero(b, 512*1024*1024)
-}
-
-func benchmarkGoSet(b *testing.B, l int) {
-	data := make([]byte, l)
-	rand.Read(data)
-
-	value := byte(rand.Intn(0x100))
-
-	b.SetBytes(int64(l))
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		for j := range data {
-			data[j] = value
-		}
+			for i := 0; i < b.N; i++ {
+				for j := range data {
+					data[j] = value
+				}
+			}
+		})
 	}
-}
-
-func BenchmarkGoSet_32(b *testing.B) {
-	benchmarkGoSet(b, 32)
-}
-
-func BenchmarkGoSet_128(b *testing.B) {
-	benchmarkGoSet(b, 128)
-}
-
-func BenchmarkGoSet_1k(b *testing.B) {
-	benchmarkGoSet(b, 1*1024)
-}
-
-func BenchmarkGoSet_16k(b *testing.B) {
-	benchmarkGoSet(b, 16*1024)
-}
-
-func BenchmarkGoSet_128k(b *testing.B) {
-	benchmarkGoSet(b, 128*1024)
-}
-
-func BenchmarkGoSet_1M(b *testing.B) {
-	benchmarkGoSet(b, 1024*1024)
-}
-
-func BenchmarkGoSet_16M(b *testing.B) {
-	benchmarkGoSet(b, 16*1024*1024)
-}
-
-func BenchmarkGoSet_128M(b *testing.B) {
-	benchmarkGoSet(b, 128*1024*1024)
-}
-
-func BenchmarkGoSet_512M(b *testing.B) {
-	benchmarkGoSet(b, 512*1024*1024)
 }
