@@ -17,8 +17,6 @@ func Memset(data []byte, value byte) {
 	memsetAsm(&data[0], uint64(len(data)), value)
 }
 
-//go:generate go run asm_gen.go
-
 // This function is implemented in memset_amd64.s
 //go:noescape
 func memsetAsm(dst *byte, len uint64, value byte)
