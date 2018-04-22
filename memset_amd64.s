@@ -22,8 +22,7 @@ TEXT ·memsetAsm(SB),NOSPLIT,$0
 	JNE bigloop
 	CMPQ BX, $64
 	JB bigloop
-	// VINSERTF128 $1, X0, Y0, Y0
-	BYTE $0xc4; BYTE $0xe3; BYTE $0x7d; BYTE $0x18; BYTE $0xc0; BYTE $0x01
+	VINSERTF128 $1, X0, Y0, Y0
 	CMPQ BX, $16777216
 	JAE hugeloop_nt_preheader
 hugeloop:
