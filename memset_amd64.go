@@ -8,6 +8,10 @@
 // Package memset is an efficient memset implementation for Golang.
 package memset
 
+import "golang.org/x/sys/cpu"
+
+var useAVX = cpu.X86.HasAVX
+
 // Memset sets each byte in data to value.
 func Memset(data []byte, value byte) {
 	if len(data) == 0 {

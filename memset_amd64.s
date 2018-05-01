@@ -19,8 +19,7 @@ TEXT ·memsetAsm(SB),NOSPLIT,$0
 	PXOR X1, X1
 	PSHUFB X1, X0
 
-	// TODO: runtime·support_avx is removed in go1.11.
-	CMPB runtime·support_avx(SB), $1
+	CMPB ·useAVX(SB), $1
 	JNE bigloop
 
 	CMPQ BX, $64
